@@ -1,5 +1,5 @@
 "use strict";
-const CACHE = "alcancia-v1";
+const CACHE = "alcancia-v2";
 const CORE = [
   "./", "./index.html", "./styles.css", "./app.js", "./gsap.min.js",
   "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-180.png"

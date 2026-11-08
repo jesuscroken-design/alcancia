@@ -169,9 +169,17 @@ function pintarJarra() {
 }
 function animarEntrada() {
   tw(() => {
-    gsap.from("#jar", { scale: .92, opacity: 0, duration: .7, ease: "power3.out" });
-    gsap.from(".meta, .primary, .linkbtn", { y: 14, opacity: 0, duration: .55, stagger: .08, ease: "power2.out" });
+    gsap.from("#jar", { scale: .92, opacity: 0, duration: .7, ease: "power3.out", overwrite: "auto" });
+    gsap.from(".meta, .primary, .linkbtn", { y: 14, opacity: 0, duration: .55, stagger: .08, ease: "power2.out", overwrite: "auto" });
   });
+  /* si el reloj de GSAP se congeló (pestaña sin foco), estados finales garantizados */
+  setTimeout(() => {
+    try {
+      ["#jar", ".meta", ".primary", ".linkbtn"].forEach(sel => {
+        document.querySelectorAll(sel).forEach(el => { el.style.transform = ""; el.style.opacity = ""; });
+      });
+    } catch (_) {}
+  }, 850);
 }
 function contadorA(nuevo) {
   const v = $("#mval");
@@ -286,22 +294,39 @@ function ondasInfinitas() {
 let hojaBloqueada = false, hojaActual = "", HOJAS = {};
 function hoja(html, { bloqueada = false, id = "x" } = {}) {
   hojaBloqueada = bloqueada; hojaActual = id;
-  const s = $("#sheet");
-  $("#sheetCard").innerHTML = `<div class="tirador"></div>` + html;
+  const s = $("#sheet"), c = $("#sheetCard");
+  c.innerHTML = `<div class="tirador"></div>` + html;
+  /* posición final garantizada por CSS/estilo inline: si GSAP se congela
+     (pestaña sin foco), la hoja SIEMPRE queda bien puesta y clicable */
+  s.style.opacity = "1";
+  s.querySelector(".hoja").style.transform = "none";
   s.classList.remove("oculto");
   s.onclick = ev => { if (ev.target === s && !bloqueada) cerrarHoja(); };
   tw(() => {
-    gsap.fromTo("#sheet .hoja", { y: "60%" }, { y: "0%", duration: .38, ease: "power3.out" });
-    gsap.fromTo("#sheet", { opacity: 0 }, { opacity: 1, duration: .25 });
+    gsap.fromTo("#sheet .hoja", { y: "60%" }, { y: "0%", duration: .38, ease: "power3.out", overwrite: "auto",
+      onComplete: () => { c.parentElement.style.transform = "none"; } });
+    gsap.fromTo("#sheet", { opacity: 0 }, { opacity: 1, duration: .25, overwrite: "auto" });
   });
+  /* red de seguridad: pase lo que pase, a los 450 ms la hoja está en su sitio */
+  setTimeout(() => {
+    s.style.opacity = "1";
+    s.querySelector(".hoja").style.transform = "";
+    s.classList.remove("oculto");
+  }, 450);
 }
 function cerrarHoja(cb) {
   const s = $("#sheet");
-  tw(() => {
-    gsap.to("#sheet .hoja", { y: "70%", duration: .28, ease: "power2.in",
-      onComplete: () => { s.classList.add("oculto"); if (cb) cb(); } });
-  });
-  if (!gsapOK()) s.classList.add("oculto");
+  const fin = () => {
+    s.classList.add("oculto");
+    s.querySelector(".hoja").style.transform = "";
+    if (cb) cb();
+  };
+  if (gsapOK()) {
+    try {
+      gsap.to("#sheet .hoja", { y: "70%", duration: .28, ease: "power2.in", overwrite: "auto", onComplete: fin });
+    } catch (_) { fin(); }
+  } else fin();
+  setTimeout(() => { if (!s.classList.contains("oculto")) fin(); }, 400);
 }
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !hojaBloqueada) cerrarHoja(); });
 
@@ -535,5 +560,17 @@ function toast(msg) {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
   }
-  document.addEventListener("visibilitychange", () => { if (!document.hidden && ACX) { try { if (ACX.state === "suspended") ACX.resume(); } catch (_) {} } });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) return;
+    try { if (ACX) { if (ACX.state === "suspended") ACX.resume(); } } catch (_) {}
+    /* al volver el foco: nada a medio animar */
+    try {
+      const s = $("#sheet");
+      if (s && !s.classList.contains("oculto")) {
+        s.style.opacity = "1";
+        s.querySelector(".hoja").style.transform = "";
+      }
+      document.querySelectorAll("#jar, .meta, .primary, .linkbtn").forEach(el => { el.style.transform = ""; el.style.opacity = ""; });
+    } catch (_) {}
+  });
 })();
