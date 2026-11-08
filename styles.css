@@ -1,0 +1,151 @@
+/* =====================  ALCANCÍA · blanco y negro  ===================== */
+:root{
+  --bg:#0b0b0f; --panel:#14141a; --panel2:#1c1c24;
+  --txt:#f5f4ee; --muted:#9a97a5; --oro:#f5c451; --oro2:#d9a83f;
+  --acc:#8b5cf6; --acc2:#c084fc; --mal:#ff8f8f;
+  --line:#ffffff14; --input:#ffffff10;
+  --rad:16px;
+}
+:root[data-tema="w"]{
+  --bg:#f4f2ec; --panel:#ffffff; --panel2:#eeece4;
+  --txt:#17161c; --muted:#6b6a75; --oro:#c9932f; --oro2:#a87a1f;
+  --acc:#7c4ce0; --acc2:#6d3fd0;
+  --line:#00000014; --input:#0000000a;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg); color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;
+  overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+button{font:inherit; color:inherit; background:none; border:0; cursor:pointer}
+input{font:inherit}
+::-webkit-scrollbar{height:8px;width:8px}
+::-webkit-scrollbar-thumb{background:#88888f55;border-radius:8px}
+
+#app{height:100dvh; display:flex; flex-direction:column; max-width:560px; margin:0 auto}
+
+/* ---------- header ---------- */
+#hdr{display:flex; align-items:center; justify-content:space-between;
+  padding:calc(env(safe-area-inset-top) + 14px) 20px 10px}
+.brand{display:flex; align-items:center; gap:10px}
+.brand img{width:34px; height:34px; border-radius:9px}
+.brand b{font-size:1.15rem; letter-spacing:.3px}
+.acts{display:flex; gap:10px}
+.acts button{width:38px; height:38px; border-radius:12px; background:var(--panel);
+  border:1px solid var(--line); font-size:1.05rem; display:grid; place-items:center}
+.acts button:active{transform:scale(.94)}
+
+/* ---------- escenario ---------- */
+#ui{flex:1; overflow-y:auto; padding:0 18px calc(env(safe-area-inset-bottom) + 24px)}
+.stage{position:relative; display:grid; place-items:center; padding:4px 0 0}
+#jar{width:min(66vw,270px); display:block}
+#lluvia{position:fixed; inset:0; pointer-events:none; z-index:40; overflow:hidden}
+.moneda{position:absolute; top:-48px; width:26px; height:26px; border-radius:50%;
+  background:radial-gradient(circle at 32% 30%, #ffdf8e, var(--oro) 55%, var(--oro2));
+  box-shadow:0 2px 6px #0006, inset -4px -5px 8px #0004, inset 3px 3px 5px #fff5;
+  border:2px solid var(--oro2)}
+.moneda::after{content:""; position:absolute; left:28%; top:22%; width:22%; height:30%;
+  border-radius:50%; background:#ffffffaa; transform:rotate(-18deg)}
+
+/* meta */
+.meta{text-align:center; margin-top:6px}
+.meta h1{font-size:1.25rem; letter-spacing:.2px}
+.meta .sub{color:var(--muted); font-size:.85rem; margin-top:4px}
+.nums{margin-top:10px; font-size:1.5rem; font-weight:800; font-variant-numeric:tabular-nums}
+.nums small{font-size:.9rem; color:var(--muted); font-weight:600}
+.barra{height:12px; border-radius:99px; background:var(--panel2);
+  border:1px solid var(--line); overflow:hidden; margin:12px auto 6px; width:min(78vw,320px)}
+.barra i{display:block; height:100%; width:0%;
+  background:linear-gradient(90deg, var(--oro2), var(--oro)); border-radius:99px}
+.pct{color:var(--muted); font-size:.85rem; font-variant-numeric:tabular-nums}
+
+/* botones */
+.primary{display:block; width:min(78vw,320px); margin:18px auto 0; padding:15px;
+  border-radius:99px; background:var(--txt); color:var(--bg); font-weight:800; font-size:1.05rem;
+  box-shadow:0 10px 26px #0003}
+.primary:active{transform:scale(.97)}
+.linkbtn{display:block; margin:12px auto 0; color:var(--muted); font-weight:700; font-size:.92rem;
+  padding:8px 18px; border-radius:99px}
+.linkbtn:active{background:var(--panel)}
+.ghost{background:var(--panel); border:1px solid var(--line); color:var(--txt);
+  padding:10px 16px; border-radius:99px; font-weight:700}
+.mal{color:var(--mal) !important}
+
+/* ---------- hoja (bottom sheet) ---------- */
+#sheet{position:fixed; inset:0; z-index:60; background:#0006;
+  display:flex; align-items:flex-end; justify-content:center; backdrop-filter:blur(3px)}
+:root[data-tema="w"] #sheet{background:#0003}
+#sheet .hoja{width:100%; max-width:560px; background:var(--panel);
+  border:1px solid var(--line); border-radius:22px 22px 0 0;
+  padding:18px 20px calc(env(safe-area-inset-bottom) + 22px); max-height:86dvh; overflow-y:auto}
+#sheet .tirador{width:42px; height:5px; border-radius:99px; background:var(--muted);
+  opacity:.5; margin:0 auto 14px}
+#sheet h2{font-size:1.15rem; margin-bottom:12px}
+#sheet h3{font-size:.95rem; margin:16px 0 8px}
+#sheet p{color:var(--muted); font-size:.86rem; line-height:1.5; margin:6px 0}
+.fila{display:flex; gap:8px; align-items:center; margin:6px 0; flex-wrap:wrap}
+label{display:block; color:var(--muted); font-size:.82rem; font-weight:700; margin:10px 0 4px}
+input[type=text], input[type=number]{
+  width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--line);
+  background:var(--input); color:var(--txt); outline:none}
+input:focus{border-color:var(--acc)}
+input[type=number]{font-variant-numeric:tabular-nums}
+.chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+.chips button{background:var(--panel2); border:1px solid var(--line); padding:9px 14px;
+  border-radius:99px; font-weight:700; font-size:.9rem}
+.chips button:active{transform:scale(.95); background:var(--acc)}
+.aviso{background:#8b5cf614; border:1px solid #8b5cf630; border-radius:12px;
+  padding:10px 12px; font-size:.84rem; color:var(--txt); line-height:1.5; margin:10px 0}
+.aviso b{color:var(--acc2)}
+
+/* historial */
+.hist{display:flex; flex-direction:column; gap:7px; margin-top:4px}
+.hrow{display:flex; align-items:center; gap:12px; background:var(--panel2);
+  border:1px solid var(--line); border-radius:12px; padding:10px 14px}
+.hrow .ic{font-size:1.1rem}
+.hrow .d{flex:1; min-width:0}
+.hrow .d b{display:block; font-size:.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.hrow .d span{color:var(--muted); font-size:.78rem}
+.hrow .a{font-weight:800; font-variant-numeric:tabular-nums; white-space:nowrap}
+.hrow .a.menos{color:var(--mal)}
+.hbarra{display:flex; justify-content:space-between; color:var(--muted); font-size:.8rem;
+  padding:2px 4px 0}
+
+/* sonido slots */
+.slot{display:flex; align-items:center; gap:10px; background:var(--panel2);
+  border:1px solid var(--line); border-radius:14px; padding:10px 12px; margin:8px 0}
+.slot .d{flex:1; min-width:0}
+.slot .d b{display:block; font-size:.9rem}
+.slot .d span{color:var(--muted); font-size:.76rem; display:block; overflow:hidden;
+  text-overflow:ellipsis; white-space:nowrap}
+.slot button{background:var(--panel); border:1px solid var(--line); padding:8px 12px;
+  border-radius:99px; font-weight:700; font-size:.84rem; flex:none}
+.slot button:active{transform:scale(.95)}
+
+/* toast */
+.toast{position:fixed; left:50%; bottom:calc(env(safe-area-inset-bottom) + 26px);
+  transform:translateX(-50%); background:var(--txt); color:var(--bg);
+  padding:10px 18px; border-radius:99px; font-weight:700; z-index:99;
+  box-shadow:0 8px 30px #0008; font-size:.9rem; white-space:nowrap; max-width:92vw;
+  overflow:hidden; text-overflow:ellipsis}
+
+/* tarjeta guía iPhone */
+.ovc{position:fixed; inset:0; z-index:80; background:#000a; display:flex;
+  align-items:center; justify-content:center; padding:20px}
+.ioscard{background:var(--panel); border:1px solid var(--line); border-radius:18px;
+  padding:22px 20px; max-width:330px; text-align:center; line-height:1.7; color:var(--muted);
+  box-shadow:0 30px 80px #00000090}
+.ioscard img{width:64px; height:64px; border-radius:14px; margin-bottom:8px}
+.ioscard h3{color:var(--txt); margin:4px 0 10px}
+.ioscard b{color:var(--txt)}
+.ioscard p{margin:5px 0}
+.ioscard .pri{display:inline-block; margin:12px 0 4px; padding:9px 18px; border-radius:99px;
+  background:var(--oro); color:#17130a; border:none; cursor:pointer; font-weight:800}
+.ioscard .nota{display:block; font-size:.72rem; color:var(--muted)}
+
+@media (min-width:640px){
+  #ui{padding-top:6px}
+}
